@@ -2,7 +2,8 @@ const path = require('path')
 const express = require('express')
 const hbs = require('hbs')
 const mongoose = require('mongoose')
-const wordModel = require('./models/word')
+const postRouter = require('./routers/post')
+const randomRouter = require('./routers/random')
 
 const port = process.env.PORT || 3000
 
@@ -30,30 +31,11 @@ mongoose
 
 // トップページ
 app.get('/', (req, res) => {
-    res.render(index, {})
+    res.render('index', {})
 })
 
-// データの取得
-app.get('/posts', async (req, res) => {
-    const words = await wordModel.find({})
-
-    try {
-        res.send(words)
-    } catch (e) {
-        res.status(500).send(err)
-    }
-})
-
-// 単語データの作成
-app.post('/posts', async (req, res) => {
-    const word = new wordModel(req.body)
-
-    try {
-        await word.save()
-        res.send(word)
-    } catch (err) {
-        res.status(500).send(err)
-    }
-})
+// ルーティング
+app.use('/posts', postRouter)
+app.use(randomRouter)
 
 app.listen(port, () => console.log('サーバーが起動しました'))
