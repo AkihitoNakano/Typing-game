@@ -8,7 +8,7 @@ router.get('/', async (req, res) => {
     try {
         const words = await Word.find({})
         const count = await Word.countDocuments({})
-        console.log('Total count => ' + count)
+        console.log('document counts => ' + count)
         res.send(words)
     } catch (e) {
         res.sendStatus(500).send(e)
@@ -38,10 +38,10 @@ router.patch('/:id', async (req, res) => {
     }
 
     try {
-        const word = await Word.findByIdAndUpdate(req.params.id, req.body, {
-            new: true,
-            runValidators: true,
-        })
+        const word = await Word.findById(req.params.id)
+        updates.forEach(update => (word[update] = req.body[update]))
+
+        await word.save()
 
         if (!word) {
             return res.sendStatus(404)

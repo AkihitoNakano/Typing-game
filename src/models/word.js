@@ -1,12 +1,11 @@
 const mongoose = require('mongoose')
 
-const Word = mongoose.model('Word', {
+const wordSchema = new mongoose.Schema({
     word: {
         type: String,
         required: true,
         unique: true,
         trim: true,
-        lowercase: true,
         minlength: 1,
     },
     score: {
@@ -19,5 +18,7 @@ const Word = mongoose.model('Word', {
         },
     },
 })
+
+const Word = mongoose.model('Word', wordSchema)
 
 module.exports = Word

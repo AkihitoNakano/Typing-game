@@ -1,5 +1,5 @@
 const word = document.getElementById('word')
-const text = document.getElementById('text')
+const answer = document.getElementById('answer')
 const scoreEl = document.getElementById('score')
 const timeEl = document.getElementById('time')
 const endgameEl = document.getElementById('end-game-container')
@@ -8,24 +8,13 @@ const settings = document.getElementById('settings')
 const settingsForm = document.getElementById('settings-form')
 const difficultySelect = document.getElementById('difficulty')
 
-// 単語のグループを取得する
-const getWords = async () => {
-    try {
-        const res = await fetch('/random')
-        const words = await res.json()
-        console.log(words)
-    } catch (e) {
-        throw new Error('Error:', e)
-    }
-}
+// Init words
+let wordsGroup, wordCount
 
-// List of words for game
-const words = ['sigh', 'tense', 'airplane']
+let selectedWord
 
-getWords()
-
-// Init word
-let randomWord
+// Input words
+let correctLetters = []
 
 // Init score
 let score = 0
@@ -42,20 +31,54 @@ difficultySelect.value =
     localStorage.getItem('difficulty') !== null ? localStorage.getItem('difficulty') : 'medium'
 
 // Focus on text on start
-text.focus()
+// text.focus()
 
 // Start counting down
 const timeInterval = setInterval(updateTime, 1000)
 
-// Generate radom word from array
-function getRandomWord() {
-    return words[Math.floor(Math.random() * words.length)]
+// 単語のグループを取得する
+async function getWords() {
+    try {
+        const res = await fetch('/random')
+        const words = await res.json()
+        return words
+    } catch (e) {
+        throw new Error('Error:', e)
+    }
+}
+
+async function initWords() {
+    wordsGroup = await getWords()
+    wordCount = wordsGroup.length - 1
+    addWordToDOM()
 }
 
 // Add word to DOM
-function addWordToDOM() {
-    randomWord = getRandomWord()
-    word.innerHTML = randomWord
+async function addWordToDOM() {
+    if (wordCount < 0) {
+        gameOver()
+    } else {
+        selectedWord = wordsGroup[wordCount].word
+        word.innerHTML = selectedWord
+        displayWord()
+        wordCount--
+    }
+}
+
+initWords()
+
+// Show typing word
+function displayWord() {
+    let displayWords = correctLetters.map(letter => letter)
+    while (displayWords.length <= selectedWord.length) {
+        displayWords.push(' ')
+    }
+
+    const convertWords = displayWords.join('').toString()
+    answer.innerHTML = `${convertWords
+        .split('')
+        .map(letter => `<span class="letter">${letter ? letter : ''}</span>`)
+        .join('')}`
 }
 
 // Update score
@@ -87,15 +110,21 @@ function gameOver() {
     endgameEl.style.display = 'flex'
 }
 
-addWordToDOM()
-
 // Event listeners
 
 //Typing
-text.addEventListener('input', e => {
-    const insertedText = e.target.value
+window.addEventListener('keydown', e => {
+    // console.log(correctLetters.length, selectedWord.length)
+    if (e.keyCode >= 65 && e.keyCode <= 90) {
+        const letter = e.key
+        if (correctLetters.length <= selectedWord.length) {
+            correctLetters.push(letter)
 
-    if (insertedText === randomWord) {
+            displayWord()
+        }
+    }
+    const insertedText = correctLetters.toString().replace(/,/g, '')
+    if (insertedText === selectedWord) {
         addWordToDOM()
         updateScore()
         // Clear
@@ -119,6 +148,7 @@ settingsBtn.addEventListener('click', () => settings.classList.toggle('hide'))
 // Settings select
 settingsForm.addEventListener('change', e => {
     difficulty = e.target.value
-    console.log(difficulty)
     localStorage.setItem('difficulty', difficulty)
 })
+
+// document.addEventListener('keydown', e => console.log(e.key))
