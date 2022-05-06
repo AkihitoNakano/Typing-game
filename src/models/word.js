@@ -17,6 +17,12 @@ const wordSchema = new mongoose.Schema({
             }
         },
     },
+    language: {
+        type: String,
+        required: true,
+        trim: true,
+        default: 'node.js',
+    },
 })
 
 const Word = mongoose.model('Word', wordSchema)

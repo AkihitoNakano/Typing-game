@@ -30,7 +30,7 @@ router.post('/', async (req, res) => {
 // Update
 router.patch('/:id', async (req, res) => {
     const updates = Object.keys(req.body)
-    const allowedUpdates = ['word', 'score']
+    const allowedUpdates = ['word', 'score', 'language']
     const isValidOperation = updates.every(update => allowedUpdates.includes(update))
 
     if (!isValidOperation) {
