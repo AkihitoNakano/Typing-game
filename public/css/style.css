@@ -1,6 +1,7 @@
 :root {
-    --background-color: #f9f7f7;
-    --container-color: #417d7a;
+    --background-color: #f8b195;
+    --container-color: #f8b195;
+    --button-color: #355c7d;
 }
 
 * {
@@ -23,6 +24,8 @@ form {
 
 button {
     cursor: pointer;
+    background-color: var(--button-color);
+    color: #fff;
     font-size: 14px;
     border-radius: 4px;
     padding: 5px 15px;
@@ -73,7 +76,7 @@ button:focus {
     background-color: var(--container-color);
     padding: 80px;
     border-radius: 15px;
-    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
+    /* box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3); */
     color: #fff;
     position: relative;
     text-align: center;

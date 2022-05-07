@@ -7,6 +7,7 @@ const settingsBtn = document.getElementById('settings-btn')
 const settings = document.getElementById('settings')
 const settingsForm = document.getElementById('settings-form')
 const difficultySelect = document.getElementById('difficulty')
+const languageSelect = document.getElementById('language')
 
 // Init words
 let wordsGroup, wordCount
@@ -30,13 +31,11 @@ let difficulty =
 difficultySelect.value =
     localStorage.getItem('difficulty') !== null ? localStorage.getItem('difficulty') : 'medium'
 
-// Focus on text on start
-// text.focus()
-
 // 単語のグループを取得する
 async function getWords() {
+    const language = languageSelect.value
     try {
-        const res = await fetch('/random')
+        const res = await fetch(`/random?language=${language}`)
         const words = await res.json()
         return words
     } catch (e) {
@@ -62,16 +61,26 @@ async function addWordToDOM() {
     }
 }
 
-initWords()
+function updateCountDown() {
+    countTimer--
+    endgameEl.innerHTML = `<h1>${countTimer}</h1>`
+    if (countTimer < 0) {
+        clearInterval(countDown)
+
+        addWordToDOM()
+        endgameEl.style.display = 'none'
+        timeEl.innerHTML = time + 's'
+        // Start counting down
+        timeInterval = setInterval(updateTime, 1000)
+    }
+}
 
 function start() {
-    console.log('start')
-    addWordToDOM()
+    initWords()
+    countTimer = 3
+    endgameEl.innerHTML = `<h1>${countTimer}</h1>`
+    countDown = setInterval(updateCountDown, 1000)
     settings.classList.add('hide')
-    endgameEl.style.display = 'none'
-    timeEl.innerHTML = time + 's'
-    // Start counting down
-    timeInterval = setInterval(updateTime, 1000)
 }
 
 // Show typing word
@@ -98,7 +107,6 @@ function updateScore() {
 function updateTime() {
     time--
     timeEl.innerHTML = time + 's'
-    console.log(time)
     if (time === 0) {
         // end game
         gameOver('Time Over')

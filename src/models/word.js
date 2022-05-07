@@ -21,7 +21,7 @@ const wordSchema = new mongoose.Schema({
         type: String,
         required: true,
         trim: true,
-        default: 'node.js',
+        default: 'javascript',
     },
 })
 

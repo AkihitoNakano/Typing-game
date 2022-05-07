@@ -2,7 +2,7 @@ const { Router } = require('express')
 const Word = require('../models/word')
 const router = Router()
 
-const wordsNumber = 20
+const wordsNumber = 5
 
 async function getNumbers(count) {
     let numbersEl = []
@@ -35,9 +35,24 @@ async function getRandomWords(randomNumbers, words) {
 }
 
 router.get('/random', async (req, res) => {
+    console.log(req.query.language)
+    if (!req.query.language) {
+        return res.status(404).send({
+            error: 'You must provide a language term',
+        })
+    }
     try {
-        const count = await Word.countDocuments({})
-        const words = await Word.find()
+        const language = req.query.language
+        let words
+        if (language === 'all') {
+            words = await Word.find({})
+        } else {
+            const lang = await Word.find({ language: language })
+            const common = await Word.find({ language: 'common' })
+            words = lang.concat(common)
+        }
+
+        const count = words.length
 
         const randomNumbers = await getNumbers(count)
         const randomWords = await getRandomWords(randomNumbers, words)
