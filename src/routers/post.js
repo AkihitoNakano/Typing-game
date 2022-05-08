@@ -18,7 +18,6 @@ router.get('/', async (req, res) => {
 // POST
 router.post('/', async (req, res) => {
     const word = new Word(req.body)
-
     try {
         await word.save()
         res.send(word)
@@ -62,6 +61,19 @@ router.delete('/:id', async (req, res) => {
         res.send(word)
     } catch (e) {
         res.sendStatus(500)
+    }
+})
+
+// POST from csv
+router.post('/csv', async (req, res) => {
+    try {
+        const word = new Word(req.body)
+        console.log(word)
+        await word.save()
+        res.send(word)
+    } catch (e) {
+        console.log(e)
+        res.status(500).send(e)
     }
 })
 
