@@ -9,14 +9,6 @@
 
         <div id="settings" class="settings">
             <form id="settings-form">
-                <div>
-                    <label for="difficulty">Difficulty</label>
-                    <select id="difficulty">
-                        <option value="easy">Easy</option>
-                        <option value="medium">Medium</option>
-                        <option value="hard">Hard</option>
-                    </select>
-                </div>
             </form>
             <form id="language-form">
                 <div>
@@ -36,12 +28,12 @@
 
             <h1 id="word"></h1>
 
-            <div class="answer" id="answer"></div>
-
-            <p class="time-container">Time left: <span id="time">0s</span></p>
+            <p class="time-container">Time spends: <span id="time">0s</span></p>
+            <p class="left-container">Words left: <span id="left">0</span></p>
 
             <p class="score-container">Score: <span id="score">0</span></p>
 
+            <div class="answer" id="answer"></div>
             <div id="end-game-container" class="end-game-container">
                 <h1>Speed Typer</h1>
                 <button onclick="start()">START</button>

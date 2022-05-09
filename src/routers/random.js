@@ -8,7 +8,7 @@ async function getNumbers(count) {
     let numbersEl = []
     while (true) {
         const randomNumber = Math.floor(Math.random() * count)
-        if (numbersEl.length <= wordsNumber) {
+        if (numbersEl.length < wordsNumber) {
             if (!numbersEl.includes(randomNumber)) {
                 numbersEl.push(randomNumber)
             } else {
@@ -35,7 +35,6 @@ async function getRandomWords(randomNumbers, words) {
 }
 
 router.get('/random', async (req, res) => {
-    console.log(req.query.language)
     if (!req.query.language) {
         return res.status(404).send({
             error: 'You must provide a language term',
@@ -51,8 +50,7 @@ router.get('/random', async (req, res) => {
             const common = await Word.find({ language: 'common' })
             words = lang.concat(common)
         }
-
-        const count = words.length
+        const count = words.length - 1
 
         const randomNumbers = await getNumbers(count)
         const randomWords = await getRandomWords(randomNumbers, words)

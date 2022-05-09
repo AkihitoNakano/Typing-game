@@ -2,6 +2,7 @@ const word = document.getElementById('word')
 const answer = document.getElementById('answer')
 const scoreEl = document.getElementById('score')
 const timeEl = document.getElementById('time')
+const leftEl = document.getElementById('left')
 const endgameEl = document.getElementById('end-game-container')
 const settingsBtn = document.getElementById('settings-btn')
 const settings = document.getElementById('settings')
@@ -20,16 +21,16 @@ let correctLetters = []
 // Init score
 let score = 0
 
-// Init time
-let time = 10
+// play timer
+let time = 0
 
-// Set difficulty to value in ls or medium
-let difficulty =
-    localStorage.getItem('difficulty') !== null ? localStorage.getItem('difficulty') : 'medium'
+// Set language to value in ls or javascript
+let language =
+    localStorage.getItem('language') !== null ? localStorage.getItem('language') : 'javascript'
 
-// Set difficulty select value
-difficultySelect.value =
-    localStorage.getItem('difficulty') !== null ? localStorage.getItem('difficulty') : 'medium'
+// Set language select value
+languageSelect.value =
+    localStorage.getItem('language') !== null ? localStorage.getItem('language') : 'javascript'
 
 // 単語のグループを取得する
 async function getWords() {
@@ -46,21 +47,24 @@ async function getWords() {
 //データベースから単語を取得してくる
 async function initWords() {
     wordsGroup = await getWords()
-    wordCount = wordsGroup.length - 1
+    wordCount = wordsGroup.length
 }
 
 // Add word to DOM
 async function addWordToDOM() {
-    if (wordCount < 0) {
+    if (wordCount <= 0) {
         gameOver('Clear!!')
     } else {
-        selectedWord = wordsGroup[wordCount].word
+        selectedWord = wordsGroup[wordCount - 1].word
         word.innerHTML = selectedWord
         displayWord()
+        // update left words
+        leftEl.innerText = wordCount
         wordCount--
     }
 }
 
+// Count down when click on Start
 function updateCountDown() {
     countTimer--
     endgameEl.innerHTML = `<h1>${countTimer}</h1>`
@@ -70,6 +74,7 @@ function updateCountDown() {
         addWordToDOM()
         endgameEl.style.display = 'none'
         timeEl.innerHTML = time + 's'
+
         // Start counting down
         timeInterval = setInterval(updateTime, 1000)
     }
@@ -105,12 +110,8 @@ function updateScore() {
 
 // Update time
 function updateTime() {
-    time--
+    time++
     timeEl.innerHTML = time + 's'
-    if (time === 0) {
-        // end game
-        gameOver('Time Over')
-    }
 }
 
 // Game over, show end screen
@@ -119,6 +120,7 @@ function gameOver(sentence) {
     endgameEl.innerHTML = `
         <h1>${sentence}</h1>
         <p>Your final score is ${score}</p>
+        <p>Clear time is ${time}s</p>
         <button onclick="location.reload()">Reload</button>
     `
 
@@ -145,19 +147,11 @@ window.addEventListener('keydown', e => {
     const insertedText = correctLetters.toString().replace(/,/g, '')
     if (insertedText === selectedWord) {
         setTimeout(() => {
-            addWordToDOM()
             updateScore()
+            addWordToDOM()
             // Clear
             correctLetters = []
             displayWord()
-
-            if (difficulty === 'hard') {
-                time += 2
-            } else if (difficulty === 'medium') {
-                time += 3
-            } else {
-                time += 5
-            }
 
             updateTime()
         }, 100)
@@ -167,8 +161,8 @@ window.addEventListener('keydown', e => {
 // Settings btn click
 settingsBtn.addEventListener('click', () => settings.classList.toggle('hide'))
 
-// Settings select
-settingsForm.addEventListener('change', e => {
-    difficulty = e.target.value
-    localStorage.setItem('difficulty', difficulty)
+// language select to local storage
+languageSelect.addEventListener('change', e => {
+    language = e.target.value
+    localStorage.setItem('language', language)
 })
