@@ -1,8 +1,9 @@
 const path = require('path')
 const express = require('express')
+require('./db/mongoose')
 const hbs = require('hbs')
-const mongoose = require('mongoose')
-const postRouter = require('./routers/post')
+const userRouter = require('./routers/users')
+const postRouter = require('./routers/word_router')
 const randomRouter = require('./routers/random')
 
 const port = process.env.PORT || 3000
@@ -21,21 +22,14 @@ hbs.registerPartials(partialsPath)
 
 app.use(express.static(publicDirectoryPath))
 
-// データベース接続
-mongoose
-    .connect(
-        'mongodb+srv://resonant:JTXB7ovGguJlcsnP@cluster0.ktf3y.mongodb.net/typing_game?retryWrites=true&w=majority'
-    )
-    .then(() => console.log('データベース接続に成功しました'))
-    .catch(e => console.log(e))
-
 // トップページ
 app.get('/', (req, res) => {
     res.render('index', {})
 })
 
 // ルーティング
-app.use('/posts', postRouter)
+app.use('/users', userRouter)
+app.use('/words', postRouter)
 app.use(randomRouter)
 
 app.listen(port, () => console.log('サーバーが起動しました'))
