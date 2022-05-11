@@ -2,7 +2,7 @@ const path = require('path')
 const express = require('express')
 require('./db/mongoose')
 const hbs = require('hbs')
-const userRouter = require('./routers/users')
+const userRouter = require('./routers/user')
 const postRouter = require('./routers/word_router')
 const randomRouter = require('./routers/random')
 

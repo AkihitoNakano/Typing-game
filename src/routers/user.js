@@ -3,7 +3,7 @@ const User = require('../models/user')
 const auth = require('../middleware/auth')
 const router = Router()
 
-router.post('/', async (req, res, next) => {
+router.post('/', async (req, res) => {
     const user = new User(req.body)
     try {
         await user.save()
@@ -26,6 +26,7 @@ router.post('/login', async (req, res) => {
 })
 
 router.post('/logout', auth, async (req, res) => {
+    // console.log(req.user)
     try {
         req.user.tokens = req.user.tokens.filter(token => {
             return token.token !== req.token
@@ -48,7 +49,8 @@ router.post('/logoutAll', auth, async (req, res) => {
     }
 })
 
-router.get('/me', auth, async (req, res) => {
+router.get('/me', async (req, res) => {
+    console.log(req.user)
     res.send(req.user)
 })
 

@@ -39,7 +39,7 @@ const userSchema = new mongoose.Schema(
         },
         tokens: [
             {
-                tokens: {
+                token: {
                     type: String,
                     required: true,
                 },
@@ -51,7 +51,7 @@ const userSchema = new mongoose.Schema(
     }
 )
 
-userSchema.virtual('tasks', {
+userSchema.virtual('words', {
     ref: 'Word',
     localField: '_id',
     foreignField: 'owner',
@@ -95,9 +95,8 @@ userSchema.statics.findByCredentials = async (email, password) => {
 
 userSchema.pre('save', async function (next) {
     const user = this
-
     if (user.isModified('password')) {
-        user.password = await bcrypt.hash(user.password, 2849)
+        user.password = await bcrypt.hash(user.password, 9)
     }
 
     next()
