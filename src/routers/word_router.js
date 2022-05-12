@@ -1,12 +1,21 @@
 const { Router } = require('express')
 const Word = require('../models/word')
-const User = require('../models/user')
 const auth = require('../middleware/auth')
 
 const router = Router()
 
-// Get all words
-router.get('/', async (req, res) => {
+// GET words
+// GET /words?lang=javascript
+// GET /words?score=1
+// GET /words?sortBy=createAt:asc
+router.get('/', auth, async (req, res) => {
+    const tag = req.query.lang
+    const match = {}
+
+    console.log(tag, req.body)
+
+    // if (tag === req.bo)
+
     try {
         const words = await Word.find({})
         const count = await Word.countDocuments({})
@@ -17,7 +26,7 @@ router.get('/', async (req, res) => {
     }
 })
 
-// POST
+// Post a word
 router.post('/', async (req, res) => {
     const word = new Word(req.body)
     try {
@@ -70,9 +79,9 @@ router.delete('/:id', async (req, res) => {
 router.post('/csv', async (req, res) => {
     try {
         const word = new Word(req.body)
-        console.log(word)
+        console.log(word.word)
         await word.save()
-        res.send(word)
+        res.send()
     } catch (e) {
         console.log(e)
         res.status(500).send(e)

@@ -3,6 +3,7 @@ const User = require('../models/user')
 const auth = require('../middleware/auth')
 const router = Router()
 
+// Create user
 router.post('/', async (req, res) => {
     const user = new User(req.body)
     try {
@@ -49,11 +50,12 @@ router.post('/logoutAll', auth, async (req, res) => {
     }
 })
 
-router.get('/me', async (req, res) => {
-    console.log(req.user)
+// Read profile
+router.get('/me', auth, async (req, res) => {
     res.send(req.user)
 })
 
+// Update user
 router.patch('/me', auth, async (req, res) => {
     const updates = Object.keys(req.body)
     const allowedUpdates = ['name', 'email', 'password']
@@ -74,6 +76,7 @@ router.patch('/me', auth, async (req, res) => {
     }
 })
 
+// Delete user
 router.delete('/me', auth, async (req, res) => {
     try {
         await req.user.remove()
