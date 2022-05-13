@@ -3,6 +3,7 @@ const answer = document.getElementById('answer')
 const scoreEl = document.getElementById('score')
 const timeEl = document.getElementById('time')
 const leftEl = document.getElementById('left')
+const arrow = document.querySelector('.arrow-down')
 const endgameEl = document.getElementById('end-game-container')
 const settingsBtn = document.getElementById('settings-btn')
 const settings = document.getElementById('settings')
@@ -74,15 +75,16 @@ function updateCountDown() {
         addWordToDOM()
         endgameEl.style.display = 'none'
         timeEl.innerHTML = time + 's'
+        arrow.classList.add('show')
 
-        // Start counting down
+        // Start counting timer
         timeInterval = setInterval(updateTime, 1000)
     }
 }
 
 function start() {
     initWords()
-    countTimer = 3
+    countTimer = 1
     endgameEl.innerHTML = `<h1>${countTimer}</h1>`
     countDown = setInterval(updateCountDown, 1000)
     settings.classList.add('hide')

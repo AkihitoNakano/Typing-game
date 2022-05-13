@@ -1,7 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400&display=swap');
+
 :root {
-    --background-color: #f8b195;
-    --container-color: #f8b195;
-    --button-color: #355c7d;
+    --background-color: #eeeeee;
+    --container-color: #476072;
+    --button-color: #eeeeee;
+    --dark-color: #334257;
 }
 
 * {
@@ -10,12 +13,12 @@
 
 body {
     background-color: var(--background-color);
+    font-family: 'Roboto Mono', monospace;
     display: flex;
     align-items: center;
     justify-content: center;
     min-height: 100vh;
     margin: 0;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 form {
@@ -27,6 +30,8 @@ button {
     background-color: var(--button-color);
     color: #fff;
     font-size: 14px;
+    outline: none;
+    appearance: none;
     border-radius: 4px;
     padding: 5px 15px;
     margin-top: 20px;
@@ -36,10 +41,11 @@ select {
     width: 200px;
     padding: 5px;
     appearance: none;
+    text-align: center;
     -webkit-appearance: none;
     -moz-appearance: none;
-    border-radius: 0;
-    background-color: #a7c5e3;
+    border-radius: 8px;
+    background-color: #fff;
 }
 
 select:focus,
@@ -50,7 +56,13 @@ button:focus {
 .settings-btn {
     position: absolute;
     bottom: 30px;
-    left: 30px;
+    right: 30px;
+}
+
+i {
+    color: var(--container-color);
+    font-size: 30px;
+    padding: 3px;
 }
 
 .settings {
@@ -58,7 +70,7 @@ button:focus {
     top: 0;
     left: 0;
     width: 100%;
-    background-color: rgba(0, 0, 0, 0.3);
+    background-color: #476072;
     height: 70px;
     color: #fff;
     display: flex;
@@ -74,29 +86,47 @@ button:focus {
 
 .container {
     background-color: var(--container-color);
-    padding: 80px;
-    border-radius: 15px;
-    /* box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3); */
+    display: flex;
+    flex-direction: column;
+    padding: 0px;
+    border-radius: 10px;
+    border: 2px solid #eeeeee;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
     color: #fff;
     position: relative;
     text-align: center;
-    width: 500px;
+    margin: -200px 0 0;
+    width: 700px;
+}
+
+.container button {
+    background-color: #eeeeee;
+    color: #334257;
+    letter-spacing: 3px;
+    border-radius: 10px;
+    font-size: 20px;
+    padding: 5px 30px;
+    transition: all 0.3s ease;
+}
+
+.container button:hover {
+    background-color: #ffffff;
 }
 
 h1 {
-    margin: 0;
+    letter-spacing: 3px;
 }
 
 .answer {
     display: flex;
     position: absolute;
-    bottom: -100px;
+    bottom: -150px;
     left: 50%;
     transform: translateX(-50%);
 }
 
 .letter {
-    color: rgba(26, 26, 26, 0.868);
+    color: var(--dark-color);
     border-bottom: 3px solid #2980b9;
     display: inline-flex;
     font-size: 30px;
@@ -107,16 +137,46 @@ h1 {
     width: 20px;
 }
 
-.score-container {
-    position: absolute;
-    top: 60px;
-    right: 20px;
+.func-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    border-bottom: 1px solid #fff;
+    padding: 0px;
 }
 
-.time-container {
+.separator {
+    width: 200px;
+}
+
+.separator .title {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 0 0 5px;
+}
+
+span {
+    font-size: 30px;
+    font-weight: bold;
+    color: #faffaf;
+}
+
+.word-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 20px 0;
+}
+
+.arrow-down {
+    display: flex;
     position: absolute;
-    top: 60px;
-    left: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.arrow-down.show {
+    bottom: -50px;
 }
 
 .end-game-container {

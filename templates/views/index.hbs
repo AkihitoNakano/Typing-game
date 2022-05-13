@@ -24,19 +24,34 @@
         </div>
 
         <div class="container">
-            <small>Type the following:</small>
+            <div class="func-container">
+                <div class="separator">
+                    <p class="title">Time spends</p>
+                    <p><span id="time">0s</span></p>
+                </div>
+                <div class="separator">
+                    <p class="title">Words left</p>
+                    <p><span id="left">0</span></p>
+                </div>
+                <div class="separator">
+                    <p class="title">Score</p>
+                    <p><span id="score">0</span></p>
+                </div>
+            </div>
+            <div class="word-container">
+                <small>Type the following:</small>
+                <h1 id="word"></h1>
+            </div>
 
-            <h1 id="word"></h1>
+            <div class="arrow-down">
+                <i class="fa-solid fa-angles-down"></i>
+            </div>
 
-            <p class="time-container">Time spends: <span id="time">0s</span></p>
-            <p class="left-container">Words left: <span id="left">0</span></p>
-
-            <p class="score-container">Score: <span id="score">0</span></p>
 
             <div class="answer" id="answer"></div>
             <div id="end-game-container" class="end-game-container">
-                <h1>Speed Typer</h1>
-                <button onclick="start()">START</button>
+                <h1>Simpler is usually better.</h1>
+                <button onclick="start()">start</button>
             </div>
         </div>
 {{>end}}

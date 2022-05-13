@@ -1,6 +1,7 @@
 const { Router } = require('express')
 const Word = require('../models/word')
 const auth = require('../middleware/auth')
+const owner = require('../middleware/owner')
 
 const router = Router()
 
@@ -9,25 +10,35 @@ const router = Router()
 // GET /words?score=1
 // GET /words?sortBy=createAt:asc
 router.get('/', auth, async (req, res) => {
-    const tag = req.query.lang
-    const match = {}
+    const allowedTag = ['javascript', 'python', 'html-css']
+    let match = {}
 
-    console.log(tag, req.body)
+    // langクエリ（タグ名）とマッチしているWordを取得する
+    if (!allowedTag.includes(req.query.lang)) {
+        match = await Word.find({})
+    } else {
+        match = await Word.find({ language: req.query.lang })
+    }
 
-    // if (tag === req.bo)
+    // scoreが一致しているWordを取得する
+    if (req.query.score) {
+        match = match.filter(object => {
+            return object.score === +req.query.score
+        })
+    }
 
     try {
-        const words = await Word.find({})
-        const count = await Word.countDocuments({})
+        const count = match.length
         console.log('document counts => ' + count)
-        res.send(words)
+        res.send(match)
     } catch (e) {
+        console.log(e.message)
         res.sendStatus(500).send(e)
     }
 })
 
 // Post a word
-router.post('/', async (req, res) => {
+router.post('/', auth, async (req, res) => {
     const word = new Word(req.body)
     try {
         await word.save()
@@ -38,7 +49,7 @@ router.post('/', async (req, res) => {
 })
 
 // Update
-router.patch('/:id', async (req, res) => {
+router.patch('/:id', auth, async (req, res) => {
     const updates = Object.keys(req.body)
     const allowedUpdates = ['word', 'score', 'language']
     const isValidOperation = updates.every(update => allowedUpdates.includes(update))
@@ -63,7 +74,7 @@ router.patch('/:id', async (req, res) => {
 })
 
 // Deletes
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', auth, async (req, res) => {
     try {
         const word = await Word.findByIdAndDelete(req.params.id)
         if (!word) {
@@ -76,7 +87,7 @@ router.delete('/:id', async (req, res) => {
 })
 
 // POST from csv
-router.post('/csv', async (req, res) => {
+router.post('/csv', owner, async (req, res) => {
     try {
         const word = new Word(req.body)
         console.log(word.word)
