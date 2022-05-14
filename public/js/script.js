@@ -1,10 +1,13 @@
 const word = document.getElementById('word')
 const answer = document.getElementById('answer')
-const scoreEl = document.getElementById('score')
+const wpmEL = document.getElementById('wpm')
 const timeEl = document.getElementById('time')
-const leftEl = document.getElementById('left')
+const wordsLeftEl = document.getElementById('words-left')
+const leftColTitle = document.getElementById('left-col')
+const centerColTitle = document.getElementById('center-col')
+const wordEl = document.querySelector('.word-container')
 const arrow = document.querySelector('.arrow-down')
-const endgameEl = document.getElementById('end-game-container')
+const startGameEl = document.getElementById('start-game-container')
 const settingsBtn = document.getElementById('settings-btn')
 const settings = document.getElementById('settings')
 const settingsForm = document.getElementById('settings-form')
@@ -12,15 +15,12 @@ const difficultySelect = document.getElementById('difficulty')
 const languageSelect = document.getElementById('language')
 
 // Init words
-let wordsGroup, wordCount
-
+let wordsGroup = []
+let wordCount
 let selectedWord
 
 // Input words
 let correctLetters = []
-
-// Init score
-let score = 0
 
 // play timer
 let time = 0
@@ -47,7 +47,13 @@ async function getWords() {
 
 //データベースから単語を取得してくる
 async function initWords() {
-    wordsGroup = await getWords()
+    const arr = await getWords()
+
+    arr.map(word => {
+        const wordObject = { [word]: word.length }
+        wordsGroup.push(wordObject)
+    })
+    console.log(wordsGroup)
     wordCount = wordsGroup.length
 }
 
@@ -56,11 +62,12 @@ async function addWordToDOM() {
     if (wordCount <= 0) {
         gameOver('Clear!!')
     } else {
-        selectedWord = wordsGroup[wordCount - 1].word
+        selectedWord = Object.keys(wordsGroup[wordCount - 1])[0]
+        console.log(selectedWord)
         word.innerHTML = selectedWord
         displayWord()
         // update left words
-        leftEl.innerText = wordCount
+        wordsLeftEl.innerText = wordCount
         wordCount--
     }
 }
@@ -68,12 +75,12 @@ async function addWordToDOM() {
 // Count down when click on Start
 function updateCountDown() {
     countTimer--
-    endgameEl.innerHTML = `<h1>${countTimer}</h1>`
+    startGameEl.innerHTML = `<h1>${countTimer}</h1>`
     if (countTimer < 0) {
         clearInterval(countDown)
 
         addWordToDOM()
-        endgameEl.style.display = 'none'
+        startGameEl.style.display = 'none'
         timeEl.innerHTML = time + 's'
         arrow.classList.add('show')
 
@@ -85,10 +92,13 @@ function updateCountDown() {
 function start() {
     initWords()
     countTimer = 1
-    endgameEl.innerHTML = `<h1>${countTimer}</h1>`
+    startGameEl.innerHTML = `<h1>${countTimer}</h1>`
     countDown = setInterval(updateCountDown, 1000)
     settings.classList.add('hide')
 }
+
+// WPMの計算式 文章の単語総数 / タイプした時間(秒) * 60
+function calculateWPM() {}
 
 // Show typing word
 function displayWord() {
@@ -104,32 +114,46 @@ function displayWord() {
         .join('')}`
 }
 
-// Update score
-function updateScore() {
-    score++
-    scoreEl.innerHTML = score
-}
-
 // Update time
 function updateTime() {
     time++
     timeEl.innerHTML = time + 's'
 }
 
-// Game over, show end screen
+// Game clear, show end screen
 function gameOver(sentence) {
     clearInterval(timeInterval)
-    endgameEl.innerHTML = `
-        <h1>${sentence}</h1>
-        <p>Your final score is ${score}</p>
-        <p>Clear time is ${time}s</p>
-        <button onclick="location.reload()">Reload</button>
-    `
 
-    endgameEl.style.display = 'flex'
+    leftColTitle.innerText = 'Clear time'
+    centerColTitle.innerText = 'Rank'
+
+    // set ranking
+    const rank = setRank()
+    wordsLeftEl.innerText = rank
+
+    // Show clear text and reload button
+    wordEl.innerHTML = `
+    <small>congratulations</small>
+    <h1 id="word">---> Clear!! <---</h1>
+    <button onclick="location.reload()">Reload</button>
+    `
     answer.style.display = 'none'
+    arrow.classList.remove('show')
 }
 
+function setRank() {
+    if (time < 25) {
+        return 'S'
+    } else if (time < 30) {
+        return 'A'
+    } else if (time < 40) {
+        return 'B'
+    } else if (time < 55) {
+        return 'C'
+    } else {
+        return 'D'
+    }
+}
 // Event listeners
 
 //Typing
@@ -149,7 +173,6 @@ window.addEventListener('keydown', e => {
     const insertedText = correctLetters.toString().replace(/,/g, '')
     if (insertedText === selectedWord) {
         setTimeout(() => {
-            updateScore()
             addWordToDOM()
             // Clear
             correctLetters = []

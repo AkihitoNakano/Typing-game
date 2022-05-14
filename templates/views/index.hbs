@@ -12,7 +12,7 @@
             </form>
             <form id="language-form">
                 <div>
-                    <label for="language">Select language</label>
+                    <label for="language"> *Select language</label>
                     <select id="language">
                         <option value="javascript">JavaScript/Node.js</option>
                         <option value="python">Python</option>
@@ -26,16 +26,16 @@
         <div class="container">
             <div class="func-container">
                 <div class="separator">
-                    <p class="title">Time spends</p>
+                    <p class="title" id="left-col">Time spends</p>
                     <p><span id="time">0s</span></p>
                 </div>
                 <div class="separator">
-                    <p class="title">Words left</p>
-                    <p><span id="left">0</span></p>
+                    <p class="title" id="center-col">Words left</p>
+                    <p><span id="words-left">0</span></p>
                 </div>
                 <div class="separator">
-                    <p class="title">Score</p>
-                    <p><span id="score">0</span></p>
+                    <p class="title">WPM</p>
+                    <p><span id="wpm">0</span></p>
                 </div>
             </div>
             <div class="word-container">
@@ -49,8 +49,8 @@
 
 
             <div class="answer" id="answer"></div>
-            <div id="end-game-container" class="end-game-container">
-                <h1>Simpler is usually better.</h1>
+            <div id="start-game-container" class="start-game-container">
+                <h2>Simpler is usually better.</h2>
                 <button onclick="start()">start</button>
             </div>
         </div>

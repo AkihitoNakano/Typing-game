@@ -33,8 +33,6 @@ button {
     outline: none;
     appearance: none;
     border-radius: 4px;
-    padding: 5px 15px;
-    margin-top: 20px;
 }
 
 select {
@@ -117,6 +115,10 @@ h1 {
     letter-spacing: 3px;
 }
 
+h2 {
+    letter-spacing: 1.5px;
+}
+
 .answer {
     display: flex;
     position: absolute;
@@ -168,10 +170,18 @@ span {
     padding: 20px 0;
 }
 
+.word-container button {
+    font-size: 15px;
+    width: 120px;
+    padding: 10px 10px;
+    margin: 10px auto;
+}
+
 .arrow-down {
     display: flex;
     position: absolute;
     left: 50%;
+    z-index: -1;
     transform: translateX(-50%);
 }
 
@@ -179,7 +189,7 @@ span {
     bottom: -50px;
 }
 
-.end-game-container {
+.start-game-container {
     background-color: inherit;
     display: flex;
     align-items: center;
@@ -192,4 +202,8 @@ span {
     width: 100%;
     height: 100%;
     z-index: 1;
+}
+
+.start-game-container button {
+    margin-top: 20px;
 }

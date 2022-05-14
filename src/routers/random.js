@@ -2,7 +2,7 @@ const { Router } = require('express')
 const Word = require('../models/word')
 const router = Router()
 
-const wordsNumber = 20
+const wordsNumber = 3
 
 async function getNumbers(count) {
     let numbersEl = []
@@ -25,11 +25,8 @@ async function getNumbers(count) {
 async function getRandomWords(randomNumbers, words) {
     randomWords = []
     randomNumbers.forEach(randomNumber => {
-        const group = {
-            word: words[randomNumber].word,
-            score: words[randomNumber].score,
-        }
-        randomWords.push(group)
+        const word = words[randomNumber].word
+        randomWords.push(word)
     })
     return randomWords
 }
