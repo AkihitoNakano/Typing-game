@@ -1,10 +1,11 @@
 const word = document.getElementById('word')
 const answer = document.getElementById('answer')
-const wpmEL = document.getElementById('wpm')
+const wpmEl = document.getElementById('wpm')
 const timeEl = document.getElementById('time')
 const wordsLeftEl = document.getElementById('words-left')
 const leftColTitle = document.getElementById('left-col')
 const centerColTitle = document.getElementById('center-col')
+const rightColTitle = document.getElementById('right-col')
 const wordEl = document.querySelector('.word-container')
 const arrow = document.querySelector('.arrow-down')
 const startGameEl = document.getElementById('start-game-container')
@@ -24,6 +25,7 @@ let correctLetters = []
 
 // play timer
 let time = 0
+let timeStamp = 0
 
 // Set language to value in ls or javascript
 let language =
@@ -53,17 +55,26 @@ async function initWords() {
         const wordObject = { [word]: word.length }
         wordsGroup.push(wordObject)
     })
-    console.log(wordsGroup)
     wordCount = wordsGroup.length
 }
 
 // Add word to DOM
-async function addWordToDOM() {
+function addWordToDOM() {
     if (wordCount <= 0) {
-        gameOver('Clear!!')
+        gameOver()
+
+        // Calculate WPM
+        let sum = ''
+        wordsGroup.forEach(obj => {
+            sum += Object.keys(obj)[0]
+        })
+        calculateWPM(sum, time)
     } else {
+        // Calculate WPM
+        calculateWPM(selectedWord, time - timeStamp)
+        timeStamp = time
+
         selectedWord = Object.keys(wordsGroup[wordCount - 1])[0]
-        console.log(selectedWord)
         word.innerHTML = selectedWord
         displayWord()
         // update left words
@@ -98,7 +109,13 @@ function start() {
 }
 
 // WPMの計算式 文章の単語総数 / タイプした時間(秒) * 60
-function calculateWPM() {}
+function calculateWPM(word, time) {
+    if (word === undefined) {
+        return (wpmEl.innerText = 0)
+    }
+    const wpm = Math.floor((word.length / time) * 60)
+    wpmEl.innerText = wpm
+}
 
 // Show typing word
 function displayWord() {
@@ -121,11 +138,12 @@ function updateTime() {
 }
 
 // Game clear, show end screen
-function gameOver(sentence) {
+function gameOver() {
     clearInterval(timeInterval)
 
     leftColTitle.innerText = 'Clear time'
     centerColTitle.innerText = 'Rank'
+    rightColTitle.innerText = 'WPM.average'
 
     // set ranking
     const rank = setRank()
@@ -154,8 +172,8 @@ function setRank() {
         return 'D'
     }
 }
-// Event listeners
 
+// Event listeners
 //Typing
 window.addEventListener('keydown', e => {
     if ((e.keyCode >= 48 && e.keyCode <= 90) || e.code === 'Period' || e.key === '_') {

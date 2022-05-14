@@ -2,7 +2,7 @@ const { Router } = require('express')
 const Word = require('../models/word')
 const router = Router()
 
-const wordsNumber = 3
+const wordsNumber = 20
 
 async function getNumbers(count) {
     let numbersEl = []
