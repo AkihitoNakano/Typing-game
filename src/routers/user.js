@@ -1,6 +1,6 @@
 const { Router } = require('express')
 const User = require('../models/user')
-const auth = require('../middleware/auth')
+const { auth, authRole } = require('../middleware/auth')
 const router = Router()
 
 // Create user
@@ -77,7 +77,7 @@ router.patch('/me', auth, async (req, res) => {
 })
 
 // Delete user
-router.delete('/me', auth, async (req, res) => {
+router.delete('/me', auth, authRole('ADMIN'), async (req, res) => {
     try {
         await req.user.remove()
         res.send(req.user)

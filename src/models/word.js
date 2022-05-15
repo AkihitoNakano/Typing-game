@@ -8,15 +8,6 @@ const wordSchema = new mongoose.Schema({
         trim: true,
         minlength: 1,
     },
-    score: {
-        type: Number,
-        default: 1,
-        validate(value) {
-            if (value < 0) {
-                throw new Error('Score must be a positive number')
-            }
-        },
-    },
     language: {
         type: String,
         required: true,

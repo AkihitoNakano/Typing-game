@@ -1,3 +1,4 @@
+const res = require('express/lib/response')
 const jwt = require('jsonwebtoken')
 const User = require('../models/user')
 
@@ -23,4 +24,22 @@ const auth = async (req, res, next) => {
     }
 }
 
-module.exports = auth
+// req, res, next以外の引数を取る場合は要注意
+function authRole(role) {
+    try {
+        return (req, res, next) => {
+            if (req.user.role === role) {
+                next()
+            } else {
+                res.status(401).send('Please authenticate')
+            }
+        }
+    } catch (e) {
+        res.status(500)
+    }
+}
+
+module.exports = {
+    auth,
+    authRole,
+}

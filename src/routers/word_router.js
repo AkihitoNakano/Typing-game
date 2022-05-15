@@ -1,14 +1,13 @@
 const { Router } = require('express')
 const Word = require('../models/word')
-const auth = require('../middleware/auth')
-const owner = require('../middleware/owner')
+const { auth, authRole } = require('../middleware/auth')
 
 const router = Router()
 
 // GET words
 // GET /words?lang=javascript
-// GET /words?score=1
 // GET /words?sortBy=createAt:asc
+// limit skip
 router.get('/', auth, async (req, res) => {
     const allowedTag = ['javascript', 'python', 'html-css']
     let match = {}
@@ -18,13 +17,6 @@ router.get('/', auth, async (req, res) => {
         match = await Word.find({})
     } else {
         match = await Word.find({ language: req.query.lang })
-    }
-
-    // scoreが一致しているWordを取得する
-    if (req.query.score) {
-        match = match.filter(object => {
-            return object.score === +req.query.score
-        })
     }
 
     try {
@@ -38,7 +30,7 @@ router.get('/', auth, async (req, res) => {
 })
 
 // Post a word
-router.post('/', auth, async (req, res) => {
+router.post('/', auth, authRole('ADMIN'), async (req, res) => {
     const word = new Word(req.body)
     try {
         await word.save()
@@ -49,7 +41,7 @@ router.post('/', auth, async (req, res) => {
 })
 
 // Update
-router.patch('/:id', auth, async (req, res) => {
+router.patch('/:id', auth, authRole('ADMIN'), async (req, res) => {
     const updates = Object.keys(req.body)
     const allowedUpdates = ['word', 'score', 'language']
     const isValidOperation = updates.every(update => allowedUpdates.includes(update))
@@ -74,7 +66,7 @@ router.patch('/:id', auth, async (req, res) => {
 })
 
 // Deletes
-router.delete('/:id', auth, async (req, res) => {
+router.delete('/:id', auth, authRole('ADMIN'), async (req, res) => {
     try {
         const word = await Word.findByIdAndDelete(req.params.id)
         if (!word) {
@@ -87,7 +79,7 @@ router.delete('/:id', auth, async (req, res) => {
 })
 
 // POST from csv
-router.post('/csv', owner, async (req, res) => {
+router.post('/csv', auth, async (req, res) => {
     try {
         const word = new Word(req.body)
         console.log(word.word)
