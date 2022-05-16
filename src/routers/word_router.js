@@ -9,25 +9,8 @@ const router = Router()
 // GET /words?sortBy=createAt:asc
 // limit skip
 // create pagination function
-router.get('/', auth, async (req, res) => {
-    const allowedTag = ['javascript', 'python', 'html-css']
-    let match = {}
-
-    // langクエリ（タグ名）とマッチしているWordを取得する
-    if (!allowedTag.includes(req.query.lang)) {
-        match = await Word.find({})
-    } else {
-        match = await Word.find({ language: req.query.lang })
-    }
-
-    try {
-        const count = match.length
-        console.log('document counts => ' + count)
-        res.send(match)
-    } catch (e) {
-        console.log(e.message)
-        res.sendStatus(500).send(e)
-    }
+router.get('/', auth, queryResults(), paginatedResults(), async (req, res) => {
+    res.json(res.paginatedResults)
 })
 
 // Post a word
@@ -91,5 +74,71 @@ router.post('/csv', auth, async (req, res) => {
         res.status(500).send(e)
     }
 })
+
+// ?lang=javascript
+function queryResults() {
+    return async (req, res, next) => {
+        const allowedTag = ['javascript', 'python', 'html-css']
+        let match = {}
+
+        // langクエリ（タグ名）とマッチしているWordを取得する
+        if (!allowedTag.includes(req.query.lang)) {
+            match = await Word.find({})
+        } else {
+            match = await Word.find({ language: req.query.lang })
+        }
+
+        try {
+            const count = match.length
+            console.log('document counts => ' + count)
+            req.body = match
+            next()
+        } catch (e) {
+            res.sendStatus(500).send(e)
+        }
+    }
+}
+
+// pagination
+function paginatedResults() {
+    return async (req, res, next) => {
+        const match = req.body
+
+        let page = parseInt(req.query.page)
+        let limit = parseInt(req.query.limit)
+
+        // pageとlimitを何も入力しなければlangの全てのwordsが返ってくる
+        if (isNaN(page) && isNaN(limit)) {
+            const test = 'test'
+            page = 1
+            limit = match.length
+        }
+        const startIndex = (page - 1) * limit
+        const endIndex = page * limit
+
+        const results = {}
+
+        if (endIndex < match.length) {
+            results.next = {
+                page: page + 1,
+                limit: limit,
+            }
+        }
+
+        if (startIndex > 0) {
+            results.previous = {
+                page: page - 1,
+                limit: limit,
+            }
+        }
+        try {
+            results.results = await match.slice(startIndex, endIndex)
+            res.paginatedResults = results
+            next()
+        } catch (e) {
+            res.status(500).json({ message: e.message })
+        }
+    }
+}
 
 module.exports = router
