@@ -8,6 +8,7 @@ const router = Router()
 // GET /words?lang=javascript
 // GET /words?sortBy=createAt:asc
 // limit skip
+// create pagination function
 router.get('/', auth, async (req, res) => {
     const allowedTag = ['javascript', 'python', 'html-css']
     let match = {}
