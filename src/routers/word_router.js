@@ -5,11 +5,7 @@ const { auth, authRole } = require('../middleware/auth')
 const router = Router()
 
 // GET words
-// GET /words?lang=javascript
-// GET /words?sortBy=createAt:asc
-// limit skip
-// create pagination function
-router.get('/', auth, queryResults(), paginatedResults(), async (req, res) => {
+router.get('/', queryResults(), paginatedResults(), async (req, res) => {
     res.json(res.paginatedResults)
 })
 
@@ -63,7 +59,7 @@ router.delete('/:id', auth, authRole('ADMIN'), async (req, res) => {
 })
 
 // POST from csv
-router.post('/csv', auth, async (req, res) => {
+router.post('/csv', async (req, res) => {
     try {
         const word = new Word(req.body)
         console.log(word.word)

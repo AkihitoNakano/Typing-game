@@ -76,6 +76,7 @@ function addWordToDOM() {
 
         selectedWord = Object.keys(wordsGroup[wordCount - 1])[0]
         word.innerHTML = selectedWord
+        console.log(selectedWord)
         displayWord()
         // update left words
         wordsLeftEl.innerText = wordCount
@@ -96,7 +97,7 @@ function updateCountDown() {
         arrow.classList.add('show')
 
         // Start counting timer
-        timeInterval = setInterval(updateTime, 1000)
+        timeInterval = setInterval(updateTime, 100)
     }
 }
 
@@ -133,8 +134,9 @@ function displayWord() {
 
 // Update time
 function updateTime() {
-    time++
-    timeEl.innerHTML = time + 's'
+    time += 0.1
+    const fixedTime = time.toFixed(1)
+    timeEl.innerHTML = fixedTime + 's'
 }
 
 // Game clear, show end screen
@@ -176,7 +178,14 @@ function setRank() {
 // Event listeners
 //Typing
 window.addEventListener('keydown', e => {
-    if ((e.keyCode >= 48 && e.keyCode <= 90) || e.code === 'Period' || e.key === '_') {
+    if (
+        (e.keyCode >= 48 && e.keyCode <= 90) ||
+        e.code === 'Period' ||
+        e.key === '_' ||
+        e.key === '-' ||
+        e.key === '<' ||
+        e.key === '>'
+    ) {
         const letter = e.key
         if (correctLetters.length < selectedWord.length) {
             correctLetters.push(letter)
