@@ -1,5 +1,5 @@
 # Others
-- [ ] CSVデータをソートする
+- [x] CSVデータをソートする
 # Client side
 - [x] クリア画面のCSS
 - [x] WPMの追加
