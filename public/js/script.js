@@ -76,7 +76,6 @@ function addWordToDOM() {
 
         selectedWord = Object.keys(wordsGroup[wordCount - 1])[0]
         word.innerHTML = selectedWord
-        console.log(selectedWord)
         displayWord()
         // update left words
         wordsLeftEl.innerText = wordCount
@@ -128,7 +127,13 @@ function displayWord() {
     const convertWords = displayWords.join('').toString()
     answer.innerHTML = `${convertWords
         .split('')
-        .map(letter => `<span class="letter">${letter ? letter : ''}</span>`)
+        .map((letter, idx) => {
+            if (letter === selectedWord[idx]) {
+                return `<span class="letter">${letter ? letter : ''}</span>`
+            } else {
+                return `<span class="letter wrong">${letter ? letter : ''}</span>`
+            }
+        })
         .join('')}`
 }
 
@@ -164,9 +169,9 @@ function gameOver() {
 function setRank() {
     if (time < 25) {
         return 'S'
-    } else if (time < 30) {
+    } else if (time < 35) {
         return 'A'
-    } else if (time < 40) {
+    } else if (time < 45) {
         return 'B'
     } else if (time < 55) {
         return 'C'

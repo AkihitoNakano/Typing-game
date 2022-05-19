@@ -1,8 +1,11 @@
+# Others
+- [ ] CSVデータをソートする
 # Client side
 - [x] クリア画面のCSS
 - [x] WPMの追加
 - [ ] Accuracyの追加
 - [ ] 登録単語の充実化
+- [x] 文字の間違いをハイライト表示
 
 # Server side
 - [ ] populate(), virtualを理解する
