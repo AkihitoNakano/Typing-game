@@ -190,7 +190,8 @@ window.addEventListener('keydown', e => {
         e.key === '-' ||
         e.key === '<' ||
         e.key === '>' ||
-        e.key === ':'
+        e.key === ':' ||
+        e.key === '+'
     ) {
         const letter = e.key
         if (correctLetters.length < selectedWord.length) {
