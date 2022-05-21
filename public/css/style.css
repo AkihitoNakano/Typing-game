@@ -25,7 +25,13 @@ body {
   position: absolute;
   top: 50%;
   width: 500px;
+  transform-style: preserve-3d;
+  perspective: 800px;
   opacity: 0.2;
+}
+
+.background img {
+  transform: rotateX(30deg);
 }
 
 form {
