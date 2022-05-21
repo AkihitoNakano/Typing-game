@@ -6,6 +6,7 @@
 - [ ] Accuracyの追加
 - [ ] 登録単語の充実化
 - [x] 文字の間違いをハイライト表示
+- [x] 背景にキーボードの画像を追加する
 
 # Server side
 - [ ] populate(), virtualを理解する
