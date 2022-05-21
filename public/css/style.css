@@ -225,11 +225,3 @@ span {
 .start-game-container button {
   margin-top: 20px;
 }
-
-.start-game-container img {
-  position: absolute;
-  mix-blend-mode: multiply;
-  width: 800px;
-  opacity: 0.2;
-  z-index: -1;
-}
