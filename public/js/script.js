@@ -164,7 +164,7 @@ function gameOver() {
   wordEl.innerHTML = `
     <small>congratulations</small>
     <h1 id="word">---> Clear!! <---</h1>
-    <button onclick="location.reload()">Reload</button>
+    <button onclick="location.reload()">Retry</button>
     `
   answer.style.display = 'none'
   arrow.classList.remove('show')
