@@ -31,3 +31,39 @@ Database
 
 Deployment
 `Heroku`
+
+---
+## Database Schema
+
+```mermaid
+erDiagram
+
+users |o--o| words: "only admin related"
+
+users {
+  string name
+  string email
+  string password
+  string role
+}
+
+words {
+  string word
+  string language
+}
+
+```
+
+---
+
+```mermaid
+sequenceDiagram
+  application ->> server: fetch /random
+  server ->> DB: request to collect words
+  DB ->> server: response
+  server ->> application: send and play game
+  postman ->> DB: register each words and users
+  Note right of DB: authorization and authentication
+  javascript ->> DB: register words from csv
+  Note right of postman: not auth
+```
